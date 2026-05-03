@@ -1,0 +1,354 @@
+/* ===== FADE ANIMATIONS ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--duration-300) var(--timing-in-out) forwards;
+}
+
+.fade-out {
+  animation: fadeOut var(--duration-300) var(--timing-in-out) forwards;
+}
+
+/* ===== SLIDE ANIMATIONS ===== */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp var(--duration-300) var(--timing-in-out) forwards;
+}
+
+.slide-in-down {
+  animation: slideInDown var(--duration-300) var(--timing-in-out) forwards;
+}
+
+.slide-in-left {
+  animation: slideInLeft var(--duration-300) var(--timing-in-out) forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight var(--duration-300) var(--timing-in-out) forwards;
+}
+
+/* ===== SCALE ANIMATIONS ===== */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.scale-in {
+  animation: scaleIn var(--duration-200) var(--timing-in-out) forwards;
+}
+
+.scale-out {
+  animation: scaleOut var(--duration-200) var(--timing-in-out) forwards;
+}
+
+/* ===== SPIN/ROTATE ANIMATIONS ===== */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinReverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.spin {
+  animation: spin 1s var(--timing-linear) infinite;
+}
+
+.spin-reverse {
+  animation: spinReverse 1s var(--timing-linear) infinite;
+}
+
+.pulse {
+  animation: pulse 2s var(--timing-in-out) infinite;
+}
+
+.bounce {
+  animation: bounce 1s var(--timing-in-out) infinite;
+}
+
+/* ===== SHIMMER/SKELETON LOADING ===== */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.1) 8%,
+    rgba(255, 255, 255, 0.2) 18%,
+    rgba(255, 255, 255, 0.1) 33%
+  );
+  background-size: 800px 104px;
+}
+
+/* ===== GLOW ANIMATIONS ===== */
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+  }
+}
+
+.glow {
+  animation: glow 2s var(--timing-in-out) infinite;
+}
+
+/* ===== TOOLTIP ANIMATIONS ===== */
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tooltipFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.tooltip-enter {
+  animation: tooltipFadeIn var(--duration-150) var(--timing-in-out) forwards;
+}
+
+.tooltip-exit {
+  animation: tooltipFadeOut var(--duration-150) var(--timing-in-out) forwards;
+}
+
+/* ===== MODAL ANIMATIONS ===== */
+@keyframes modalBackdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-backdrop-enter {
+  animation: modalBackdropFadeIn var(--duration-200) var(--timing-in-out) forwards;
+}
+
+.modal-enter {
+  animation: modalFadeIn var(--duration-200) var(--timing-in-out) forwards;
+}
+
+/* ===== TRANSITION UTILITIES ===== */
+.transition-fast {
+  transition: all var(--duration-100) var(--timing-in-out);
+}
+
+.transition-normal {
+  transition: all var(--duration-300) var(--timing-in-out);
+}
+
+.transition-slow {
+  transition: all var(--duration-500) var(--timing-in-out);
+}
+
+/* ===== HOVER LIFT EFFECT ===== */
+@keyframes liftHover {
+  from {
+    transform: translateY(0);
+    box-shadow: var(--shadow-md);
+  }
+  to {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.lift-on-hover:hover {
+  animation: liftHover var(--duration-200) var(--timing-in-out) forwards;
+}
+
+/* ===== ACCESSIBILITY - REDUCE MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,175 @@
+/* src/styles/analytics.css */
+
+/* ===== DEFAULT (DARK THEME) ===== */
+.analytics-container {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.analytics-title {
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.analytics-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.analytics-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.analytics-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* Icon colors (same for both themes) */
+.analytics-icon.generated {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.analytics-icon.heart {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+}
+.analytics-icon.regenerated {
+  background: linear-gradient(135deg, #26c281 0%, #1abc9c 100%);
+}
+.analytics-icon.average {
+  background: linear-gradient(135deg, #f4a460 0%, #ff8c42 100%);
+}
+
+.analytics-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.analytics-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.analytics-value {
+  font-size: 1.5rem;
+  color: white;
+  margin: 4px 0 0 0;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ===== LIGHT THEME FIX (MAIN SOLUTION) ===== */
+.dashboard-container.theme-light .analytics-container {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-container.theme-light .analytics-title {
+  color: #1a1a1a;
+}
+
+.dashboard-container.theme-light .analytics-card {
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-container.theme-light .analytics-card:hover {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-container.theme-light .analytics-label {
+  color: #555555;
+}
+
+.dashboard-container.theme-light .analytics-value {
+  color: #111111;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .analytics-card {
+    padding: 10px;
+  }
+
+  .analytics-label {
+    font-size: 0.65rem;
+  }
+
+  .analytics-value {
+    font-size: 1.3rem;
+  }
+
+  .analytics-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .analytics-container {
+    padding: 15px;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .analytics-card {
+    padding: 8px;
+  }
+
+  .analytics-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+
+  .analytics-label {
+    font-size: 0.6rem;
+  }
+
+  .analytics-value {
+    font-size: 1.1rem;
+  }
+}

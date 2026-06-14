@@ -1,6 +1,7 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const Logger = require('../config/logger');
 const { UIGeneration } = require('../models');
+const CustomUIGenerator = require('./customUIGenerator');
 
 const logger = new Logger('UIController');
 
@@ -10,7 +11,9 @@ const uiController = {
       const { promptText } = req.body;
       const userId = req.user?.id;
 
-      // Validate input
+      // ========================================================================
+      // STEP 1: VALIDATE INPUT
+      // ========================================================================
       if (!promptText || promptText.trim().length === 0) {
         logger.warn('Empty prompt received');
         return res.status(400).json({
@@ -26,143 +29,214 @@ const uiController = {
         });
       }
 
-      // Check API key
+      logger.info('🔄 Starting UI Generation', { prompt: promptText.substring(0, 50) });
+
+      // ========================================================================
+      // STEP 2: TRY GEMINI API FIRST (Primary)
+      // ========================================================================
       const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        logger.error('GEMINI_API_KEY not configured');
-        return res.status(500).json({
-          success: false,
-          message: 'API configuration error'
-        });
-      }
+      
+      if (apiKey) {
+        try {
+          logger.info('🚀 Attempting Gemini API generation...');
 
-      logger.info('Calling Gemini API', { promptLength: promptText.length, userId });
+          const genAI = new GoogleGenerativeAI(apiKey);
+          const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-      // Initialize Gemini
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+          const enhancedPrompt = `You are an expert web UI/UX designer. Generate a MODERN, UNIQUE, and BEAUTIFUL HTML/CSS/JavaScript UI based on this EXACT requirement:
 
-      // Enhanced prompt for better results
-      const enhancedPrompt = `You are an expert web UI designer and developer. Generate modern, beautiful, and responsive HTML, CSS, and JavaScript code based on this requirement:
+PROMPT: "${promptText}"
 
-USER REQUIREMENT: ${promptText}
-
-IMPORTANT: Return ONLY a valid JSON object with NO additional text, markdown, or code blocks. Use this exact structure:
+IMPORTANT INSTRUCTIONS:
+1. Return ONLY valid JSON - NO markdown, NO code blocks, NO explanations
+2. Use this exact JSON structure:
 {
-  "html": "complete HTML structure here",
-  "css": "complete CSS styling here",
-  "js": "JavaScript code here (can be empty string if not needed)"
+  "html": "<html code>",
+  "css": "<css code>",
+  "js": "<javascript code>"
 }
 
-GUIDELINES:
-1. Generate valid, semantic HTML5
-2. Create modern, responsive CSS (mobile-first approach)
-3. Use flexbox/grid for layouts
-4. Include smooth transitions and hover effects
-5. Ensure accessibility (proper colors, contrast, labels)
-6. Make it beautiful with modern design principles
-7. Include proper spacing and typography
-8. Ensure the CSS is scoped and won't conflict
-9. Add dark mode consideration if applicable
-10. Return empty string "" for JS if no interactivity is needed
+3. DESIGN REQUIREMENTS:
+   - Make it VISUALLY STUNNING with gradients and animations
+   - Use modern design principles (spacing, typography, colors)
+   - Include emojis as icons (📱, 🎯, ⭐, etc.)
+   - Add smooth transitions and hover effects
+   - Make it RESPONSIVE for mobile/tablet/desktop
+   - Use CSS Grid and Flexbox for layouts
+   - Include proper semantic HTML5
 
-Return ONLY the JSON object, nothing else.`;
+4. COMPONENT GUIDELINES:
+   - If user asks for "dashboard" → Multi-column with sidebar, cards, tables
+   - If user asks for "landing page" → Hero banner, feature cards, CTA buttons
+   - If user asks for "product store" → Navigation, product grid, prices, cart
+   - If user asks for "form" → Professional form fields with validation styling
+   - If user asks for "social feed" → Posts, comments, likes, user profiles
+   - For ANY prompt → Generate appropriate layout + components
 
-      // Call Gemini API with timeout
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 30000);
+5. STYLING REQUIREMENTS:
+   - Use vibrant color gradients (NOT flat colors)
+   - Include shadow effects for depth
+   - Add border-radius for modern look
+   - Use professional fonts
+   - Ensure at least 1.6 line-height
+   - Add transition effects on all interactive elements
 
-      try {
-        const result = await model.generateContent(enhancedPrompt);
-        clearTimeout(timeout);
-        
-        if (!result || !result.response) {
-          logger.error('No response from Gemini API');
-          return res.status(500).json({
-            success: false,
-            message: 'No response from AI service'
-          });
-        }
+6. JavaScript MUST:
+   - Add button click handlers
+   - Form submission handling
+   - Interactive effects
+   - Console logging for debugging
 
-        const responseText = result.response.text();
-        logger.info('Gemini API response received', { length: responseText.length });
+DO NOT generate the same generic landing page. Make it UNIQUE based on the prompt.
+Return ONLY the JSON object.`;
 
-        // Parse JSON response
-        let parsedResponse;
-        try {
-          // Try to extract JSON from the response
-          const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-          
-          if (!jsonMatch) {
-            logger.error('No JSON found in response', { response: responseText.substring(0, 200) });
-            return res.status(500).json({
-              success: false,
-              message: 'Invalid AI response format'
-            });
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 35000);
+
+          const result = await model.generateContent(enhancedPrompt);
+          clearTimeout(timeout);
+
+          if (!result || !result.response) {
+            throw new Error('No response from Gemini API');
           }
 
-          parsedResponse = JSON.parse(jsonMatch[0]);
-          
-          logger.info('JSON parsed successfully');
-        } catch (parseError) {
-          logger.error('Failed to parse JSON', { error: parseError.message });
-          return res.status(500).json({
-            success: false,
-            message: 'Failed to parse AI response'
-          });
-        }
+          const responseText = result.response.text();
+          logger.info('✅ Gemini response received', { length: responseText.length });
 
-        // Validate response structure
-        if (!parsedResponse.html) {
-          logger.error('Missing HTML in response');
-          return res.status(500).json({
-            success: false,
-            message: 'Invalid response from AI'
-          });
-        }
-
-        const uiData = {
-          html: parsedResponse.html || '',
-          css: parsedResponse.css || '',
-          js: parsedResponse.js || ''
-        };
-
-        // Save to database (optional)
-        if (userId) {
+          // Parse JSON from response
+          let parsedResponse;
           try {
-            await UIGeneration.create({
-              userId,
-              prompt: promptText,
-              html: uiData.html,
-              css: uiData.css,
-              js: uiData.js
+            const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+            
+            if (!jsonMatch) {
+              throw new Error('No JSON found in response');
+            }
+
+            parsedResponse = JSON.parse(jsonMatch[0]);
+
+            if (!parsedResponse.html) {
+              throw new Error('Missing HTML in parsed response');
+            }
+
+            logger.info('✅ Successfully parsed Gemini response');
+
+            // ================================================================
+            // SUCCESS: Use Gemini API response
+            // ================================================================
+            const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated UI</title>
+  <style>
+    ${parsedResponse.css}
+  </style>
+</head>
+<body>
+  ${parsedResponse.html}
+  <script>
+    ${parsedResponse.js}
+  </script>
+</body>
+</html>`;
+
+            const uiData = {
+              html: html,
+              css: parsedResponse.css || '',
+              js: parsedResponse.js || '',
+              source: 'gemini-api',
+              timestamp: new Date().toISOString()
+            };
+
+            // Save to database
+            if (userId) {
+              try {
+                await UIGeneration.create({
+                  userId,
+                  prompt: promptText,
+                  html: uiData.html,
+                  css: uiData.css,
+                  js: uiData.js,
+                  source: 'gemini-api'
+                });
+              } catch (dbError) {
+                logger.error('Database save error (non-critical)', { error: dbError.message });
+              }
+            }
+
+            return res.status(200).json({
+              success: true,
+              message: 'UI generated successfully using Gemini API',
+              data: uiData,
+              source: 'gemini-api'
             });
-            logger.info('UI generation saved to database');
-          } catch (dbError) {
-            logger.error('Failed to save to database', { error: dbError.message });
-            // Don't fail the request if DB save fails
+
+          } catch (parseError) {
+            logger.warn('⚠️ Failed to parse Gemini response, using fallback generator', {
+              error: parseError.message
+            });
+            // Continue to fallback
           }
+
+        } catch (apiError) {
+          logger.warn('⚠️ Gemini API failed, using fallback generator', {
+            error: apiError.message
+          });
+          // Continue to fallback
         }
-
-        return res.status(200).json({
-          success: true,
-          message: 'UI generated successfully',
-          data: uiData
-        });
-
-      } catch (timeoutError) {
-        clearTimeout(timeout);
-        logger.error('API request timeout');
-        return res.status(504).json({
-          success: false,
-          message: 'Request timeout - Please try again'
-        });
+      } else {
+        logger.warn('⚠️ GEMINI_API_KEY not configured, using fallback generator');
       }
 
+      // ========================================================================
+      // STEP 3: USE CUSTOM GENERATOR AS FALLBACK
+      // ========================================================================
+      logger.info('🎨 Generating UI with custom generator...');
+
+      const customUIResult = CustomUIGenerator.generate(promptText);
+
+      if (!customUIResult.success) {
+        throw new Error('Custom generator failed');
+      }
+
+      logger.info('✅ Custom generator completed successfully');
+
+      // Save to database
+      if (userId) {
+        try {
+          await UIGeneration.create({
+            userId,
+            prompt: promptText,
+            html: customUIResult.html,
+            css: customUIResult.css,
+            js: customUIResult.js,
+            source: 'custom-generator'
+          });
+        } catch (dbError) {
+          logger.error('Database save error (non-critical)', { error: dbError.message });
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'UI generated successfully using custom generator',
+        data: {
+          html: customUIResult.html,
+          css: customUIResult.css,
+          js: customUIResult.js,
+          source: 'custom-generator',
+          analysis: customUIResult.analysis,
+          colors: customUIResult.colors,
+          timestamp: customUIResult.generated_at
+        },
+        source: 'custom-generator'
+      });
+
     } catch (error) {
-      logger.error('Error in generateUI', { 
+      logger.error('❌ UI Generation failed', {
         error: error.message,
-        stack: error.stack 
+        stack: error.stack
       });
 
       return res.status(500).json({
@@ -173,6 +247,9 @@ Return ONLY the JSON object, nothing else.`;
     }
   },
 
+  /**
+   * Get UI generation statistics
+   */
   getUserStats: async (req, res) => {
     try {
       const userId = req.user?.id;
@@ -184,32 +261,63 @@ Return ONLY the JSON object, nothing else.`;
         });
       }
 
-      // Get stats from database
       const stats = await UIGeneration.findAll({
         where: { userId },
         raw: true
       });
 
-      const totalPrompts = stats.length;
-      const totalFavorites = stats.filter(s => s.isFavorite).length;
-      const totalRegenerated = stats.reduce((sum, s) => sum + (s.regenerationCount || 0), 0);
-      const averageLength = totalPrompts > 0
-        ? Math.round(stats.reduce((sum, s) => sum + (s.prompt ? s.prompt.length : 0), 0) / totalPrompts)
-        : 0;
+      const geminiCount = stats.filter(s => s.source === 'gemini-api').length;
+      const generatorCount = stats.filter(s => s.source === 'custom-generator').length;
 
       return res.status(200).json({
         success: true,
-        totalPrompts,
-        totalFavorites,
-        totalRegenerated,
-        averageLength
+        totalGenerated: stats.length,
+        generatedByGeminiAPI: geminiCount,
+        generatedByCustomGenerator: generatorCount,
+        lastGenerated: stats[0]?.createdAt || null
       });
 
     } catch (error) {
-      logger.error('Error getting user stats', { error: error.message });
+      logger.error('Error getting stats', { error: error.message });
       return res.status(500).json({
         success: false,
-        message: 'Failed to get stats'
+        message: 'Failed to get statistics'
+      });
+    }
+  },
+
+  /**
+   * Get UI generation history
+   */
+  getHistory: async (req, res) => {
+    try {
+      const userId = req.user?.id;
+      const limit = req.query.limit || 10;
+
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          message: 'Unauthorized'
+        });
+      }
+
+      const history = await UIGeneration.findAll({
+        where: { userId },
+        order: [['createdAt', 'DESC']],
+        limit: parseInt(limit),
+        attributes: ['id', 'prompt', 'source', 'createdAt']
+      });
+
+      return res.status(200).json({
+        success: true,
+        history: history
+      });
+
+    } catch (error) {
+      logger.error('Error getting history', { error: error.message });
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to get history'
       });
     }
   }

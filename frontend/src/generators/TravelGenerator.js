@@ -1,8 +1,7 @@
 /**
  * TravelGenerator.js - AI-driven Travel UI Generator
  * Generates responsive travel and booking interfaces
- * 
- * @extends BaseWebsiteGenerator
+ * * @extends BaseWebsiteGenerator
  * @version 1.0.0
  */
 
@@ -1428,13 +1427,13 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Generate standalone CSS file
    */
-  generateStandaloneCss() 
-    { 
-        return `\${this.generateWebsiteCss()}\n\n\${this.generateTravelCss()}\`;
+  generateStandaloneCss() {
+    return `${this.generateWebsiteCss()}\n\n${this.generateTravelCss()}`;
   }
+  
   /**
    * Generate standalone HTML file (complete)
-  **/
+   */
   generateStandaloneHtml() {
     return this.generate();
   }
@@ -1454,6 +1453,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 }
 
-export default TravelGenerator ; 
-  }
-
+export default TravelGenerator;

@@ -1361,18 +1361,18 @@ class FoodDeliveryGenerator extends BaseAppGenerator {
         return;
       }
       
-      cartItemsList.innerHTML = appState.cart.map((item, idx) => `
+      cartItemsList.innerHTML = appState.cart.map((item, idx) => \`
         <div class="cart-item">
           <div class="cart-item-info">
-            <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-price">\$${item.price.toFixed(2)}</div>
+            <div class="cart-item-name">\${item.name}</div>
+            <div class="cart-item-price">$\${Number(item.price).toFixed(2)}</div>
           </div>
           <div class="cart-item-controls">
-            <button onclick="removeFromCart(${idx})">−</button>
-            <span style="margin: 0 0.5rem;">${item.quantity || 1}</span>
-            <button onclick="addToCart({id: ${item.id}, name: '${item.name}', price: ${item.price}})">+</button>
+            <button onclick="removeFromCart(\${idx})">−</button>
+            <span style="margin: 0 0.5rem;">\${item.quantity || 1}</span>
+            <button onclick="addToCart(\${item.id})">+</button>
           </div>
-        </div>  `).join('');
+        </div>  \`).join('');
       
       updateCartTotal();
     }

@@ -1,8 +1,7 @@
 /**
  * RealEstateGenerator.js - AI-driven Real Estate UI Generator
  * Generates responsive property listing and marketplace interfaces
- * 
- * @extends BaseWebsiteGenerator
+ * * @extends BaseWebsiteGenerator
  * @version 1.0.0
  */
 
@@ -277,14 +276,11 @@ class RealEstateGenerator extends BaseWebsiteGenerator {
     return `
 <div class="map-view">
   <svg viewBox="0 0 1200 600" style="width: 100%; height: 100%;">
-    <!-- Map background -->
     <rect width="1200" height="600" fill="#e8f4f8"/>
     
-    <!-- Grid lines -->
     <line x1="0" y1="300" x2="1200" y2="300" stroke="#d0e8f2" stroke-width="1"/>
     <line x1="600" y1="0" x2="600" y2="600" stroke="#d0e8f2" stroke-width="1"/>
     
-    <!-- Property markers -->
     <g class="property-markers">
       <circle cx="150" cy="150" r="20" fill="#667eea" opacity="0.8" class="marker" data-price="450000"/>
       <circle cx="350" cy="200" r="20" fill="#10b981" opacity="0.8" class="marker" data-price="380000"/>
@@ -296,7 +292,6 @@ class RealEstateGenerator extends BaseWebsiteGenerator {
       <circle cx="1050" cy="150" r="20" fill="#10b981" opacity="0.8" class="marker" data-price="495000"/>
     </g>
     
-    <!-- Map labels -->
     <text x="100" y="30" font-size="16" font-weight="bold" fill="#333">Downtown</text>
     <text x="900" y="580" font-size="16" font-weight="bold" fill="#333">Suburbs</text>
   </svg>
@@ -1745,8 +1740,7 @@ class RealEstateApp {
     const monthlyRate = annualRate / 100 / 12;
     const numberOfPayments = years * 12;
 
-    const monthlyPayment = principal * 
-      (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / 
+    const monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / 
       (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
 
     const totalAmount = monthlyPayment * numberOfPayments;
@@ -1843,7 +1837,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * Generate standalone CSS file
    */
   generateStandaloneCss() {
-    return \`\${this.generateWebsiteCss()}\n\n\${this.generateRealEstateCss()}\`;
+    return `${this.generateWebsiteCss()}\n\n${this.generateRealEstateCss()}`;
   }
 
   /**
@@ -1869,4 +1863,3 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 export default RealEstateGenerator;
-  

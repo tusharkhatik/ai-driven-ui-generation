@@ -1,8 +1,7 @@
 /**
  * EducationGenerator.js - AI-driven Education Dashboard Generator
  * Generates responsive learning management and student portal interfaces
- * 
- * @extends BaseDashboardGenerator
+ * * @extends BaseDashboardGenerator
  * @version 1.0.0
  */
 
@@ -1685,8 +1684,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Generate standalone CSS file
    */
-  generateStandaloneCss() 
-    { return `\${this.generateDashboardCss()}\n\n\${this.generateEducationCss()}\`;
+  generateStandaloneCss() {
+    return `${this.generateDashboardCss()}\n\n${this.generateEducationCss()}`;
   }
 
   /**

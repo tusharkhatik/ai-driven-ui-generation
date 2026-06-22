@@ -1,21 +1,18 @@
 /**
  * SocialGenerator.js
  * Extends BaseAppGenerator to generate social media, community, and messaging applications
- * 
- * Supported Applications:
+ * * Supported Applications:
  * - Social Media App
  * - Community Platform
  * - Messaging App
- * 
- * Components:
+ * * Components:
  * - feed
  * - storyBar
  * - chatPanel
  * - userProfile
  * - notificationCenter
  * - commentSection
- * 
- * Supported Layouts:
+ * * Supported Layouts:
  * - social-feed
  * - messaging-layout
  * - creator-platform
@@ -23,9 +20,12 @@
  * - minimal-social
  */
 
+import BaseAppGenerator from './base/BaseAppGenerator.js';
+
 class SocialGenerator extends BaseAppGenerator {
   constructor(config = {}) {
     super(config);
+    this.category = 'social';
     this.appType = config.appType || 'Social Media App';
     this.layout = config.layout || 'social-feed';
     this.components = config.components || ['feed', 'userProfile', 'notificationCenter'];
@@ -95,7 +95,8 @@ class SocialGenerator extends BaseAppGenerator {
    * Generate HTML structure
    */
   generateHTML() {
-    let html = this.getHTMLTemplate();
+    // Provide a fallback if BaseAppGenerator doesn't define it
+    let html = typeof this.getHTMLTemplate === 'function' ? this.getHTMLTemplate() : '';
     
     switch (this.layout) {
       case 'social-feed':
@@ -109,7 +110,7 @@ class SocialGenerator extends BaseAppGenerator {
       case 'minimal-social':
         return this.generateMinimalSocialHTML();
       default:
-        return html;
+        return html || this.generateSocialFeedHTML();
     }
   }
 
@@ -128,7 +129,6 @@ class SocialGenerator extends BaseAppGenerator {
 </head>
 <body>
   <div class="app-container social-feed-layout">
-    <!-- Navigation Header -->
     <header class="navbar">
       <div class="navbar-content">
         <div class="logo">
@@ -155,9 +155,7 @@ class SocialGenerator extends BaseAppGenerator {
       </div>
     </header>
 
-    <!-- Main Content -->
     <div class="main-content">
-      <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sidebar-section">
           <h3>Trending Topics</h3>
@@ -203,11 +201,9 @@ class SocialGenerator extends BaseAppGenerator {
         </div>
       </aside>
 
-      <!-- Feed Section -->
       <section class="feed">
         ${this.components.includes('storyBar') ? this.generateStoryBar() : ''}
         
-        <!-- Create Post -->
         <div class="compose-area">
           <div class="compose-header">
             <div class="user-avatar-large">👤</div>
@@ -221,13 +217,11 @@ class SocialGenerator extends BaseAppGenerator {
           </div>
         </div>
 
-        <!-- Posts Feed -->
         <div class="posts-container" id="postsContainer">
           ${this.generateFeedPosts()}
         </div>
       </section>
 
-      <!-- Right Sidebar -->
       <aside class="right-sidebar">
         ${this.components.includes('notificationCenter') ? this.generateNotificationCenter() : ''}
       </aside>
@@ -256,7 +250,6 @@ class SocialGenerator extends BaseAppGenerator {
 </head>
 <body>
   <div class="app-container messaging-layout">
-    <!-- Navigation Header -->
     <header class="navbar">
       <div class="navbar-content">
         <div class="logo">
@@ -275,7 +268,6 @@ class SocialGenerator extends BaseAppGenerator {
     </header>
 
     <div class="main-content messaging-content">
-      <!-- Conversations List -->
       <aside class="conversations-sidebar">
         <div class="conversations-header">
           <h2>Messages</h2>
@@ -287,7 +279,6 @@ class SocialGenerator extends BaseAppGenerator {
         </div>
       </aside>
 
-      <!-- Chat Area -->
       <section class="chat-area">
         <div class="chat-header">
           <div class="chat-user-info">
@@ -304,7 +295,6 @@ class SocialGenerator extends BaseAppGenerator {
           </div>
         </div>
 
-        <!-- Messages -->
         <div class="messages-container" id="messagesContainer">
           <div class="empty-state">
             <p>No conversation selected</p>
@@ -312,7 +302,6 @@ class SocialGenerator extends BaseAppGenerator {
           </div>
         </div>
 
-        <!-- Message Input -->
         <div class="message-input-area">
           <input type="text" placeholder="Type a message..." class="message-input" id="messageInput">
           <button class="send-btn">➤</button>
@@ -363,7 +352,6 @@ class SocialGenerator extends BaseAppGenerator {
     </header>
 
     <div class="main-content creator-content">
-      <!-- Creator Stats -->
       <div class="creator-stats">
         <div class="stat-card">
           <span class="stat-label">Followers</span>
@@ -387,7 +375,6 @@ class SocialGenerator extends BaseAppGenerator {
         </div>
       </div>
 
-      <!-- Create Content Section -->
       <section class="create-section">
         <h2>Create New Content</h2>
         <div class="content-types">
@@ -418,7 +405,6 @@ class SocialGenerator extends BaseAppGenerator {
         </div>
       </section>
 
-      <!-- Recent Posts -->
       <section class="recent-content">
         <h2>Your Recent Content</h2>
         <div class="content-grid" id="contentGrid">
@@ -467,7 +453,6 @@ class SocialGenerator extends BaseAppGenerator {
     </header>
 
     <div class="main-content community-content">
-      <!-- Communities Sidebar -->
       <aside class="communities-sidebar">
         <div class="sidebar-header">
           <h3>Your Communities</h3>
@@ -478,7 +463,6 @@ class SocialGenerator extends BaseAppGenerator {
         </ul>
       </aside>
 
-      <!-- Feed -->
       <section class="community-feed">
         <div class="feed-header">
           <h2>Community Feed</h2>
@@ -494,7 +478,6 @@ class SocialGenerator extends BaseAppGenerator {
         </div>
       </section>
 
-      <!-- Community Stats -->
       <aside class="community-sidebar">
         <div class="community-info">
           <h3>Community Stats</h3>
@@ -550,7 +533,6 @@ class SocialGenerator extends BaseAppGenerator {
     </header>
 
     <div class="main-content minimal-content">
-      <!-- Feed -->
       <section class="minimal-feed">
         <div class="compose-area-minimal">
           <input type="text" placeholder="Share something..." class="compose-input-minimal">
@@ -1601,7 +1583,6 @@ body {
 }
 
 .notification-item.unread {
-  background-color: var(--primary-color);
   background-color: ${this.theme === 'dark' ? 'rgba(29, 161, 242, 0.1)' : 'rgba(29, 161, 242, 0.05)'};
   border-left: 3px solid var(--primary-color);
 }
@@ -3191,7 +3172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return {
       name: this.appType,
       version: '1.0.0',
-      description: \`Generated \${this.appType} using SocialGenerator\`,
+      description: `Generated ${this.appType} using SocialGenerator`,
       layout: this.layout,
       components: this.components,
       theme: this.theme,
@@ -3223,30 +3204,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 }
 
-/**
- * BaseAppGenerator - Base class for app generators
- * (This would be implemented in a separate file in a real project)
- */
-class BaseAppGenerator {
-  constructor(config = {}) {
-    this.config = config;
-  }
-
-  getHTMLTemplate() {
-    return '<!-- Base HTML Template -->';
-  }
-}
-
-// Export for use in modules
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SocialGenerator;
-}`;
-  }
-}
-
-
-// Example usage and export
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SocialGenerator;
-}
-
+export default SocialGenerator;

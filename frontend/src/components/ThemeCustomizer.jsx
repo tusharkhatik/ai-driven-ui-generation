@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-/**
- * Simple ThemeCustomizer
- * - toggles light/dark mode
- * - selects a primary color which is applied to CSS variable --primary
- * - persists settings in localStorage under key 'ui_theme'
- */
-
 const LS_KEY = 'ui_theme';
-
 const defaultSettings = {
-  mode: 'light', // or 'dark'
-  primary: '#2563eb' // nice blue
+  mode: 'light',
+  primary: '#2563eb'
 };
 
 function applyTheme(settings) {
@@ -40,9 +32,7 @@ export default function ThemeCustomizer({ className = '' }) {
     applyTheme(settings);
     try {
       localStorage.setItem(LS_KEY, JSON.stringify(settings));
-    } catch {
-      // ignore storage errors
-    }
+    } catch {}
   }, [settings]);
 
   return (
@@ -77,7 +67,6 @@ export default function ThemeCustomizer({ className = '' }) {
   );
 }
 
-/* Inline styles to avoid adding new CSS files — replace with existing style system if needed */
 const containerStyle = {
   padding: '8px 12px',
   borderRadius: 8,

@@ -9,7 +9,7 @@ console.log('Initializing Sequelize connection...');
 const sequelize = new Sequelize(
   process.env.DB_NAME || 'ai_ui_generator',
   process.env.DB_USER || 'root',
-  process.env.DB_PASSWORD || 'password',
+  process.env.DB_PASSWORD || 'root123',
   {
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,

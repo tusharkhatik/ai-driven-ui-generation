@@ -108,8 +108,8 @@ const AI_ENHANCEMENT_PRESETS = [
 
 // ===== DEVICE PRESETS =====
 const DEVICE_PRESETS = {
-  tablet: { width: '768px', height: '1024px', icon: FaTabletAlt, label:'Desktop' },
-  desktop: { width: '100%', height: '100%', icon: FaDesktop, label: 'Tablet'  },
+  desktop: { width: '100%', height: '100%', icon: FaDesktop, label: 'Desktop' },
+  tablet: { width: '768px', height: '1024px', icon: FaTabletAlt, label: 'Tablet' },
   mobile: { width: '390px', height: '844px', icon: FaMobileAlt, label: 'Mobile' },
 };
 
@@ -400,12 +400,14 @@ const PreviewSection = ({
           <div className={`preview-wrapper device-${device}`}>
             {generatedUI?.html || showPreview ? (
               <div className="preview-container">
-                <iframe
-                  title="UI Preview"
-                  className={`ui-preview preview-${device}`}
-                  srcDoc={iframeHTML}
-                  sandbox="allow-scripts allow-same-origin allow-forms"
-                />
+                <div className="preview-iframe-wrapper">
+                  <iframe
+                    title="UI Preview"
+                    className={`ui-preview preview-${device}`}
+                    srcDoc={iframeHTML}
+                    sandbox="allow-scripts allow-same-origin allow-forms"
+                  />
+                </div>
               </div>
             ) : (
               <div className="empty-preview">

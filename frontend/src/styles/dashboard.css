@@ -1331,55 +1331,50 @@ body {
 
 .ui-preview {
   border: none;
-  border-radius: var(--radius-lg);
-  background: #0d1117 !important;
-  color: #e6edf3 !important;
-  font-weight: 600;
-  box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2);
-  max-width: 100%;
+  background: #ffffff !important;
+  transition: all 0.3s ease;
   width: 100%;
 }
 
-/* Desktop - Full width responsive */
+/* 💻 Desktop View - Full width */
 .preview-wrapper.device-desktop .ui-preview {
   width: 100%;
   height: auto;
-  min-height: 450px;
-  border-radius: var(--radius-lg);
+  min-height: 500px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Tablet - Scaled properly with wrapper */
+/* 📱 Tablet View - Strict 768x1024 iPad Dimensions */
 .preview-wrapper.device-tablet .preview-iframe-wrapper {
   transform: scale(0.7);
   transform-origin: top center;
+  padding-bottom: 20px;
 }
-
 .preview-wrapper.device-tablet .ui-preview {
-  width: 768px;
-  height: 1024px;
+  width: 768px !important;
+  min-width: 768px !important;
+  max-width: 768px !important;
+  height: 1024px !important;
   border-radius: 24px;
   border: 16px solid #1a1a1a;
-  box-shadow: 
-    inset 0 0 0 2px #000,
-    0 20px 60px rgba(0, 212, 255, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-/* Mobile - Scaled properly with wrapper */
+/* 📱 Mobile View - Strict 390x844 iPhone Dimensions */
 .preview-wrapper.device-mobile .preview-iframe-wrapper {
-  transform: scale(0.65);
+  transform: scale(0.75);
   transform-origin: top center;
+  padding-bottom: 20px;
 }
-
 .preview-wrapper.device-mobile .ui-preview {
-  width: 390px;
-  height: 844px;
-  border-radius: 50px;
+  width: 390px !important;
+  min-width: 390px !important;
+  max-width: 390px !important;
+  height: 844px !important;
+  border-radius: 40px;
   border: 14px solid #1a1a1a;
-  box-shadow: 
-    inset 0 0 0 2px #000,
-    0 0 0 0.5px #333,
-    0 20px 60px rgba(0, 212, 255, 0.2);
-  background: #0d1117 !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 /* ===== CODE VIEW ===== */

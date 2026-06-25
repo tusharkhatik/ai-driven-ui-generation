@@ -286,6 +286,7 @@ const PromptSection = ({
 };
 
 // ===== DEVICE SELECTOR COMPONENT =====
+// ===== DEVICE SELECTOR COMPONENT =====
 const DeviceSelector = ({ device, onDeviceChange }) => {
   return (
     <div className="device-selector-container">
@@ -393,38 +394,29 @@ const PreviewSection = ({
             </div>
           )}
 
+
           {/* Device Selector */}
-          {(generatedUI?.html || showPreview) && <DeviceSelector device={device} onDeviceChange={onDeviceChange} />}
+{(generatedUI?.html || showPreview) && <DeviceSelector device={device} onDeviceChange={onDeviceChange} />}
 
           {/* Preview Wrapper */}
-          <div className={`preview-wrapper device-${device}`}>
-            {generatedUI?.html || showPreview ? (
-              <div className="preview-container">
-                {/* FIXED WRAPPER: Matches CSS scale target and adds flex constraints without touching CSS */}
-                <div className="preview-iframe-wrapper" style={{ minWidth: 'max-content' }}>
-                  <iframe
-                    title="UI Preview"
-                    className={`ui-preview ${DEVICE_PRESETS[device]?.class || 'preview-desktop'}`}
-                    srcDoc={iframeHTML}
-                    sandbox="allow-scripts allow-same-origin allow-forms"
-                    style={{
-                      maxWidth: 'none',
-                      flexShrink: 0,
-                      width: DEVICE_PRESETS[device].width,
-                      height: DEVICE_PRESETS[device].height,
-                      backgroundColor: 'transparent'
-                    }}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="empty-preview">
-                <FaRocket className="empty-icon" />
-                <p>👀 Your UI will appear here</p>
-              </div>
-            )}
-          </div>
-        </>
+<div className={`preview-wrapper device-${device}`}>
+  {generatedUI?.html || showPreview ? (
+    <div className="preview-iframe-wrapper">
+      <iframe
+        title="UI Preview"
+        className={`ui-preview preview-${device}`}
+        srcDoc={iframeHTML}
+        sandbox="allow-scripts allow-same-origin allow-forms"
+      />
+    </div>
+  ) : (
+    <div className="empty-preview">
+      <FaRocket className="empty-icon" />
+      <p>👀 Your UI will appear here</p>
+    </div>
+  )}
+</div>
+</>
       ) : (
         // Code View
         <div className="code-view">
@@ -456,19 +448,9 @@ const PreviewSection = ({
                   className={`copy-code-btn ${copiedCode === 'HTML' ? 'copied' : ''}`}
                   onClick={() => onCopyCode(currentUIData?.html, 'HTML')}
                 >
-                  {copiedCode === 'HTML' ? (
-                    <>
-                      <FaCheck /> Copied!
-                    </>
-                  ) : (
-                    <>
-                      <FaCopy /> Copy
-                    </>
-                  )}
+                  {copiedCode === 'HTML' ? <><FaCheck /> Copied!</> : <><FaCopy /> Copy</>}
                 </button>
-                <pre>
-                  <code>{formatCode(currentUIData?.html)}</code>
-                </pre>
+                <pre><code>{formatCode(currentUIData?.html)}</code></pre>
               </div>
             )}
 
@@ -478,19 +460,9 @@ const PreviewSection = ({
                   className={`copy-code-btn ${copiedCode === 'CSS' ? 'copied' : ''}`}
                   onClick={() => onCopyCode(currentUIData?.css, 'CSS')}
                 >
-                  {copiedCode === 'CSS' ? (
-                    <>
-                      <FaCheck /> Copied!
-                    </>
-                  ) : (
-                    <>
-                      <FaCopy /> Copy
-                    </>
-                  )}
+                  {copiedCode === 'CSS' ? <><FaCheck /> Copied!</> : <><FaCopy /> Copy</>}
                 </button>
-                <pre>
-                  <code>{formatCode(currentUIData?.css)}</code>
-                </pre>
+                <pre><code>{formatCode(currentUIData?.css)}</code></pre>
               </div>
             )}
 
@@ -500,19 +472,9 @@ const PreviewSection = ({
                   className={`copy-code-btn ${copiedCode === 'JS' ? 'copied' : ''}`}
                   onClick={() => onCopyCode(currentUIData?.js, 'JS')}
                 >
-                  {copiedCode === 'JS' ? (
-                    <>
-                      <FaCheck /> Copied!
-                    </>
-                  ) : (
-                    <>
-                      <FaCopy /> Copy
-                    </>
-                  )}
+                  {copiedCode === 'JS' ? <><FaCheck /> Copied!</> : <><FaCopy /> Copy</>}
                 </button>
-                <pre>
-                  <code>{formatCode(currentUIData?.js)}</code>
-                </pre>
+                <pre><code>{formatCode(currentUIData?.js)}</code></pre>
               </div>
             )}
           </div>

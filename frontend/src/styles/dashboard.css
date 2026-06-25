@@ -1269,111 +1269,130 @@ body {
   color: inherit;
 }
 
-/* ===== PREVIEW WRAPPER - FIXED FOR NO CROPPING ===== */
+/* ===== PREVIEW WRAPPER FIX ===== */
 .preview-wrapper {
   flex: 1;
-  background: var(--preview-bg);
-  border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   overflow: auto;
-  padding: var(--spacing-lg);
-  min-height: 500px;
-  max-height: none;
-  box-shadow: inset 0 0 20px rgba(102, 126, 234, 0.1);
+  background: #ffffff;
   position: relative;
+  min-height: 500px;
+  align-items: center; 
+  padding: 20px;
 }
 
-.preview-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: var(--spacing-lg);
-  max-height: none;
-  overflow: visible;
+/* FORCE DESKTOP TO STRETCH */
+.preview-wrapper.device-desktop {
+  align-items: stretch !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
-.empty-preview {
-  text-align: center;
-  color: var(--text-secondary);
-  padding: 50px 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-lg);
+.preview-wrapper.device-desktop .preview-iframe-wrapper {
+  transform: scale(1) !important;
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 !important;
 }
 
-.empty-icon {
-  font-size: 3.5rem;
-  color: var(--icon-color);
-  opacity: 0.5;
+.ui-preview.preview-desktop {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 600px !important;
+  border-radius: 0 !important;
 }
-
-.empty-preview p {
-  margin: var(--spacing-md) 0;
-  font-size: 1.15rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
 /* ===== PREVIEW IFRAME WRAPPER (NEW) ===== */
-/* ===== PREVIEW IFRAME WRAPPER (BULLETPROOF) ===== */
 .preview-iframe-wrapper {
   display: flex;
   align-items: flex-start;
   justify-content: center;
   width: 100%;
+  transition: transform 0.3s ease;
+  transform-origin: top center; /* Prevents the scaled UI from drifting upwards */
 }
 
 .ui-preview {
-  /* CRITICAL: flex-shrink: 0 forces the iframe to respect the exact pixel width below */
-  flex-shrink: 0 !important;
-  max-width: none !important;
   border: none;
-  background: transparent; /* Allows your dashboard background to show through empty space */
+  border-radius: var(--radius-lg);
+  background: #0d1117 !important; /* Forces dark background for the frame */
+  color: #e6edf3 !important;
+  font-weight: 600;
   box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2);
-  transition: width 0.3s ease, height 0.3s ease;
+  max-width: 100%;
+  width: 100%;
 }
 
-/* Desktop */
-.preview-wrapper.device-desktop .ui-preview {
+/* --- Desktop Sizing --- */
+.preview-wrapper.device-desktop {
+  padding: 0; /* Removes padding for edge-to-edge desktop feel */
+  align-items: stretch; /* FIX: Forces the iframe to stretch full width instead of squishing */
+}
+
+.preview-wrapper.device-desktop .preview-container {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+.preview-wrapper.device-desktop .preview-iframe-wrapper {
+  transform: scale(1);
   width: 100% !important;
   height: 100% !important;
-  min-height: 450px;
-  border-radius: var(--radius-lg);
+  min-width: 100% !important; /* Safely overrides any leftover inline styles in JSX */
+  flex: 1;
 }
 
-/* Tablet (iPad Air Dimensions) */
+.preview-wrapper.device-desktop .ui-preview,
+.preview-desktop {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 500px;
+  border-radius: 8px;
+}
+
+/* --- Tablet Sizing --- */
 .preview-wrapper.device-tablet .preview-iframe-wrapper {
-  transform: scale(0.65);
-  transform-origin: top center;
+  transform: scale(0.75); /* Scales the fixed canvas down to fit the dashboard */
 }
 
 .preview-wrapper.device-tablet .ui-preview {
-  width: 820px !important;
-  height: 1180px !important;
+  width: 768px; /* Fixed Tablet Canvas */
+  height: 1024px;
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 16px solid #1a1a1a; /* Device bezel */
+  box-shadow: inset 0 0 0 2px #000, 0 20px 60px rgba(0, 212, 255, 0.2);
 }
 
-/* Mobile */
+/* --- Mobile Sizing --- */
 .preview-wrapper.device-mobile .preview-iframe-wrapper {
-  transform: scale(0.65);
-  transform-origin: top center;
+  transform: scale(0.8); /* Scales the fixed canvas down to fit the dashboard */
 }
 
 .preview-wrapper.device-mobile .ui-preview {
-  width: 390px !important;
-  height: 844px !important;
-  border-radius: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 390px; /* Fixed Mobile Canvas */
+  height: 844px;
+  border-radius: 50px;
+  border: 14px solid #1a1a1a; /* Device bezel */
+  background: #0d1117 !important;
+  box-shadow: inset 0 0 0 2px #000, 0 0 0 0.5px #333, 0 20px 60px rgba(0, 212, 255, 0.2);
 }
 
+/* --- Responsive adjustments for smaller screens --- */
+@media (max-width: 1200px) {
+  .preview-wrapper.device-tablet .preview-iframe-wrapper {
+    transform: scale(0.65);
+  }
+}
+
+@media (max-width: 768px) {
+  .preview-wrapper.device-tablet .preview-iframe-wrapper {
+    transform: scale(0.55);
+  }
+  .preview-wrapper.device-mobile .preview-iframe-wrapper {
+    transform: scale(0.65);
+  }
+}
 /* ===== CODE VIEW ===== */
 .code-view {
   flex: 1;

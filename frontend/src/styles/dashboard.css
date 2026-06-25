@@ -1322,6 +1322,7 @@ body {
 }
 
 /* ===== PREVIEW IFRAME WRAPPER (NEW) ===== */
+/* ===== PREVIEW IFRAME WRAPPER (BULLETPROOF) ===== */
 .preview-iframe-wrapper {
   display: flex;
   align-items: flex-start;
@@ -1330,51 +1331,47 @@ body {
 }
 
 .ui-preview {
+  /* CRITICAL: flex-shrink: 0 forces the iframe to respect the exact pixel width below */
+  flex-shrink: 0 !important;
+  max-width: none !important;
   border: none;
-  background: #ffffff !important;
-  transition: all 0.3s ease;
-  width: 100%;
+  background: transparent; /* Allows your dashboard background to show through empty space */
+  box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2);
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
-/* 💻 Desktop View - Full width */
+/* Desktop */
 .preview-wrapper.device-desktop .ui-preview {
-  width: 100%;
-  height: auto;
-  min-height: 500px;
-  border-radius: var(--radius-md);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 450px;
+  border-radius: var(--radius-lg);
 }
 
-/* 📱 Tablet View - Strict 768x1024 iPad Dimensions */
+/* Tablet (iPad Air Dimensions) */
 .preview-wrapper.device-tablet .preview-iframe-wrapper {
-  transform: scale(0.7);
+  transform: scale(0.65);
   transform-origin: top center;
-  padding-bottom: 20px;
-}
-.preview-wrapper.device-tablet .ui-preview {
-  width: 768px !important;
-  min-width: 768px !important;
-  max-width: 768px !important;
-  height: 1024px !important;
-  border-radius: 24px;
-  border: 16px solid #1a1a1a;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-/* 📱 Mobile View - Strict 390x844 iPhone Dimensions */
-.preview-wrapper.device-mobile .preview-iframe-wrapper {
-  transform: scale(0.75);
-  transform-origin: top center;
-  padding-bottom: 20px;
+.preview-wrapper.device-tablet .ui-preview {
+  width: 820px !important;
+  height: 1180px !important;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+/* Mobile */
+.preview-wrapper.device-mobile .preview-iframe-wrapper {
+  transform: scale(0.65);
+  transform-origin: top center;
+}
+
 .preview-wrapper.device-mobile .ui-preview {
   width: 390px !important;
-  min-width: 390px !important;
-  max-width: 390px !important;
   height: 844px !important;
   border-radius: 40px;
-  border: 14px solid #1a1a1a;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* ===== CODE VIEW ===== */

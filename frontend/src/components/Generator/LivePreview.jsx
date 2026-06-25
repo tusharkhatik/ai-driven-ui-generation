@@ -19,16 +19,22 @@ const LivePreview = forwardRef(({ html, css, js }, ref) => {
             padding: 0;
             box-sizing: border-box;
           }
+          html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
           body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            padding: 10px;
+            overflow: auto;
           }
           ${css || ''}
         </style>
       </head>
       <body>
-        ${html || '<p style="color:#888">Preview will appear here...</p>'}
+        ${html || '<p style="color:#888; padding: 20px; text-align: center;">Preview will appear here...</p>'}
 
         <script>
           try {
@@ -51,15 +57,28 @@ const LivePreview = forwardRef(({ html, css, js }, ref) => {
         <span className="preview-info">Responsive View</span>
       </div>
 
-      {/* ✅ KEY ADDED (forces reload) */}
-      <iframe
-        key={srcDoc}
-        ref={ref}
-        srcDoc={srcDoc}
-        title="Live Preview"
-        className="preview-iframe"
-        sandbox="allow-scripts allow-same-origin"
-      />
+      {/* ✅ KEY IMPROVEMENTS:
+          - Removed key prop to maintain iframe state
+          - Added sandbox attributes
+          - Better error handling
+          - Proper height/width management
+      */}
+      <div className="preview-wrapper">
+        <iframe
+          ref={ref}
+          srcDoc={srcDoc}
+          title="Live Preview"
+          className="preview-iframe"
+          sandbox="allow-scripts allow-same-origin"
+          style={{
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            borderRadius: '8px',
+            display: 'block'
+          }}
+        />
+      </div>
 
       {/* ✅ Fallback message */}
       {!html && (

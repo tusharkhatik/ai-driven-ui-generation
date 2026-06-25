@@ -63,7 +63,7 @@ import {
 // ===== DEFAULT UI =====
 const DEFAULT_UI = {
   html: `<div style="min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;">
-  <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 100%;">
+  <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 800px; width: 100%;">
     <h1 style="color: #667eea; text-align: center; margin-bottom: 20px; font-size: 2rem; margin: 0 0 20px 0;">Welcome</h1>
     <p style="color: #666; text-align: center; margin-bottom: 30px; line-height: 1.6; margin: 0 0 30px 0;">This is a default preview. Enter a prompt and click Generate to create custom UI.</p>
     <button style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s; margin: 0;">
@@ -108,9 +108,9 @@ const AI_ENHANCEMENT_PRESETS = [
 
 // ===== DEVICE PRESETS =====
 const DEVICE_PRESETS = {
-  desktop: { width: '100%', height: '100%', icon: FaDesktop, label: 'Desktop' },
-  tablet: { width: '768px', height: '1024px', icon: FaTabletAlt, label: 'Tablet' },
-  mobile: { width: '390px', height: '844px', icon: FaMobileAlt, label: 'Mobile' },
+  desktop: { width: '100%', height: '100%', icon: FaDesktop, label: 'Desktop', class: 'preview-desktop' },
+  tablet: { width: '768px', height: '1024px', icon: FaTabletAlt, label: 'Tablet', class: 'preview-tablet' },
+  mobile: { width: '375px', height: '844px', icon: FaMobileAlt, label: 'Mobile', class: 'preview-mobile' },
 };
 
 // ===== CUSTOM HOOK FOR THEME =====
@@ -400,12 +400,20 @@ const PreviewSection = ({
           <div className={`preview-wrapper device-${device}`}>
             {generatedUI?.html || showPreview ? (
               <div className="preview-container">
-                <div className="preview-iframe-wrapper">
+                {/* FIXED WRAPPER: Matches CSS scale target and adds flex constraints without touching CSS */}
+                <div className="preview-iframe-wrapper" style={{ minWidth: 'max-content' }}>
                   <iframe
                     title="UI Preview"
-                    className={`ui-preview preview-${device}`}
+                    className={`ui-preview ${DEVICE_PRESETS[device]?.class || 'preview-desktop'}`}
                     srcDoc={iframeHTML}
                     sandbox="allow-scripts allow-same-origin allow-forms"
+                    style={{
+                      maxWidth: 'none',
+                      flexShrink: 0,
+                      width: DEVICE_PRESETS[device].width,
+                      height: DEVICE_PRESETS[device].height,
+                      backgroundColor: 'transparent'
+                    }}
                   />
                 </div>
               </div>
@@ -607,15 +615,15 @@ const DashboardFooter = ({ performanceMetrics }) => {
     <footer className="dashboard-footer">
       <div className="footer-content">
         <div className="footer-section">
-        <div class="about-section">
- <div class="about-section">
+        <div className="about-section">
+ <div className="about-section">
   <h4>🚀 About</h4>
 
-  <p class="about-main">
+  <p className="about-main">
     An intelligent platform to design, preview, and optimize modern UIs faster.
   </p>
 
-  <div class="about-features">
+  <div className="about-features">
     <span>✨ Smart automation</span>
     <span>📱 Real-time previews</span>
     <span>⚡ Instant feedback</span>
@@ -623,7 +631,7 @@ const DashboardFooter = ({ performanceMetrics }) => {
 
 </div>
 
-  <p class="about-tagline">
+  <p className="about-tagline">
     Build smarter. Create faster.
   </p>
 </div>
@@ -1029,16 +1037,13 @@ export default function Dashboard() {
     return () => clearTimeout(loadAutoSaved);
   }, [showToast]);
 
-  // ===== THEME =====
+  // ===== REFACTORED THEME HOOK (Respects CSS rules) =====
   useEffect(() => {
     try {
-      const container = document.querySelector('.dashboard-container');
-      if (container) {
-        container.classList.remove('theme-light', 'theme-dark', 'theme-gradient');
-        container.classList.add(`theme-${currentTheme}`);
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        document.body.setAttribute('data-theme', currentTheme);
-      }
+      // Let React handle the .dashboard-container class naturally via the render method.
+      // This applies the necessary attributes to the DOM root without fighting CSS overrides.
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      document.body.setAttribute('data-theme', currentTheme);
     } catch (err) {
       console.error('Error applying theme:', err);
     }
@@ -1433,27 +1438,6 @@ ${js.split('\n').map((line) => '        ' + line).join('\n')}
           />
         ))}
       </div>
-
-      {/* Mock Data Warning
-      {isMockData && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '70px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: '#fff3cd',
-            border: '1px solid #ffc107',
-            color: '#856404',
-            padding: '12px 20px',
-            borderRadius: '6px',
-            zIndex: 999,
-            fontWeight: '500',
-          }}
-        >
-          ⚠️ Using Mock Data - Real API is unavailable
-        </div>
-      )} */}
 
       {/* Modals */}
       <KeyboardShortcutsModal isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />

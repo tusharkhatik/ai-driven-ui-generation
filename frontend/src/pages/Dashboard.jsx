@@ -411,8 +411,7 @@ const PreviewSection = ({
     </div>
   ) : (
     <div className="empty-preview">
-      <FaRocket className="empty-icon" />
-      <p>👀 Your UI will appear here</p>
+      
     </div>
   )}
 </div>

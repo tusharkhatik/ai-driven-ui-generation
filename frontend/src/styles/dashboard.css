@@ -2322,3 +2322,85 @@ body {
   font-weight: 600;
   font-size: 0.95rem;
 }
+
+.live-preview-container .preview-wrapper,
+.live-preview-container .preview-container,
+.live-preview-container .preview-iframe-wrapper {
+  width: 100% !important;
+  height: calc(100vh - 180px) !important; /* adjust if your header/footer height differs */
+  min-height: 560px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Ensure iframe elements expand to fill the wrapper */
+.live-preview-container .preview-iframe,
+.live-preview-container .ui-preview,
+.live-preview-container iframe {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-height: 560px !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* When device-desktop class is active, remove any scale transform and let it fill */
+.preview-wrapper.device-desktop,
+.preview-wrapper.device-desktop .preview-iframe-wrapper {
+  transform: none !important;
+  transform-origin: none !important;
+  justify-content: stretch !important;
+  align-items: stretch !important;
+}
+
+/* Ensure ui-preview class (used on iframe) respects full size */
+.preview-wrapper.device-desktop .ui-preview {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: calc(100vh - 220px) !important;
+}
+
+/* Keep tablet/mobile scales as they are, but ensure they remain centered */
+.preview-wrapper.device-tablet .preview-iframe-wrapper,
+.preview-wrapper.device-mobile .preview-iframe-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Make sure any preview container inside dashboard fills available width */
+.preview-section .preview-wrapper,
+.preview-section .preview-container,
+.preview-section .preview-iframe-wrapper {
+  width: 100% !important;
+}
+
+/* If there are nested padding/margin rules that push the iframe in,
+   reduce them to avoid the centered narrow card effect */
+.live-preview-container .preview-wrapper > .preview-container,
+.live-preview-container .preview-wrapper > .preview-iframe-wrapper {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Small screens: reduce min-height to avoid excessive vertical space */
+@media (max-width: 900px) {
+  .live-preview-container .preview-wrapper,
+  .live-preview-container .preview-container,
+  .live-preview-container .preview-iframe-wrapper {
+    height: auto !important;
+    min-height: 360px !important;
+    overflow: auto !important;
+  }
+
+  .live-preview-container .preview-iframe,
+  .live-preview-container .ui-preview,
+  .live-preview-container iframe {
+    min-height: 360px !important;
+  }
+}
